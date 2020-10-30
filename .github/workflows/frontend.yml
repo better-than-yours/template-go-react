@@ -25,6 +25,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: [build]
+    if: false # template
     steps:
       - uses: actions/checkout@v2
       - name: Set env variables

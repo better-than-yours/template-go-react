@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/joho/godotenv"
 
-	"github.com/better-than-yours/casinolytics/api"
+	"github.com/better-than-yours/template-go-react/api"
 )
 
 func main() {

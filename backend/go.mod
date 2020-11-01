@@ -1,4 +1,4 @@
-module github.com/better-than-yours/casinolytics
+module github.com/better-than-yours/template-go-react
 
 go 1.15
 

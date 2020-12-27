@@ -48,13 +48,8 @@ jobs:
     if: false # template
     steps:
       - uses: actions/checkout@v2
-      - name: Set env variables
-        run: |
-          echo "REPOSITORY=${REPOSITORY:-$GITHUB_REPOSITORY}" >> $GITHUB_ENV
-        env:
-          REPOSITORY: ${{ secrets.REPOSITORY }}
       - name: Setup SSH key
-        uses: webfactory/ssh-agent@v0.2.0
+        uses: webfactory/ssh-agent@v0.4.1
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Install doctl
@@ -66,7 +61,7 @@ jobs:
           ssh-keyscan ${{ secrets.DIGITALOCEAN_CLUSTER_IP }} >> $HOME/.ssh/known_hosts
           doctl compute ssh ${{ secrets.DIGITALOCEAN_CLUSTER_NAME }} --ssh-command " \
             docker-compose -f infra/services/template-go-react/docker-compose.yml pull; \
-            docker-compose -f infra/services/template-go-react/docker-compose.yml up -d $REPOSITORY-api; \
+            docker-compose -f infra/services/template-go-react/docker-compose.yml up -d api; \
           "
 
 

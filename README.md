@@ -4,6 +4,7 @@
 ```sh 
 $ go mod tidy
 $ go get -u
+$ npx npm-check-updates -u
 ```
 
 ### secrets

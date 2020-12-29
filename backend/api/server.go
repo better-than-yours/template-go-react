@@ -21,7 +21,7 @@ type Server struct {
 // Run starts http server for API with all routes
 func (s *Server) Run(port int) {
 	router := chi.NewRouter()
-	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
+	router.Get("/ping", func(w http.ResponseWriter, r *http.Request) {
 		render.PlainText(w, r, "OK")
 	})
 	s.httpServer = &http.Server{

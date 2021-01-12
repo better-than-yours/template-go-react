@@ -35,13 +35,13 @@ jobs:
           DOCKER_USER: ${{ secrets.DOCKER_USER }}
       - name: Build image
         run: |
-          docker build --build-arg VERSION=$GITHUB_REF:$GITHUB_SHA -t $REPOSITORY-api -f Dockerfile.backend .
+          docker build --build-arg VERSION=$GITHUB_REF:$GITHUB_SHA -t ghcr.io/$REPOSITORY-api -f Dockerfile.backend .
       - name: Publish image
         if: github.ref == 'refs/heads/master'
         run: |
-          docker login -u $DOCKER_USER -p ${{ secrets.DOCKER_TOKEN }}
-          docker tag $REPOSITORY-api $REPOSITORY-api:$TAG
-          docker push $REPOSITORY-api
+          echo ${{ secrets.DOCKER_TOKEN }} | docker login ghcr.io -u $DOCKER_USER --password-stdin
+          docker tag ghcr.io/$REPOSITORY-api $REPOSITORY-api:$TAG
+          docker push ghcr.io/$REPOSITORY-api
   deploy:
     runs-on: ubuntu-latest
     needs: [lint, build]

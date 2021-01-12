@@ -36,10 +36,16 @@ jobs:
         uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - name: Set env variables
+        run: |
+          echo "DOCKER_USER=${DOCKER_USER:-$GITHUB_ACTOR}" >> $GITHUB_ENV
+        env:
+          DOCKER_USER: ${{ secrets.DOCKER_USER }}
       - name: Deploy
         run: |
           ssh-keyscan ${{ secrets.DIGITALOCEAN_CLUSTER_IP }} >> $HOME/.ssh/known_hosts
           doctl compute ssh ${{ secrets.DIGITALOCEAN_CLUSTER_NAME }} --ssh-command " \
+            echo ${{ secrets.DOCKER_TOKEN }} | docker login ghcr.io -u $DOCKER_USER --password-stdin
             docker-compose -f infra/services/template-go-react/docker-compose.yml pull; \
             docker-compose -f infra/services/template-go-react/docker-compose.yml up -d web; \
           "

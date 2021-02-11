@@ -1,5 +1,11 @@
 name: frontend
-on: push
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -8,20 +14,20 @@ jobs:
       - name: Set env variables
         run: |
           echo "TAG=$(echo $GITHUB_SHA | head -c7)" >> $GITHUB_ENV
-          echo "REPOSITORY=${REPOSITORY:-$GITHUB_REPOSITORY}" >> $GITHUB_ENV
+          echo "REPOSITORY=ghcr.io/${REPOSITORY:-$GITHUB_REPOSITORY}-web" >> $GITHUB_ENV
           echo "DOCKER_USER=${DOCKER_USER:-$GITHUB_ACTOR}" >> $GITHUB_ENV
         env:
           REPOSITORY: ${{ secrets.REPOSITORY }}
           DOCKER_USER: ${{ secrets.DOCKER_USER }}
       - name: Build image
         run: |
-          docker build --build-arg VERSION=$GITHUB_REF:$GITHUB_SHA -t ghcr.io/$REPOSITORY-web -f Dockerfile.frontend .
+          docker build --build-arg VERSION=$GITHUB_REF:$GITHUB_SHA -t $REPOSITORY -f Dockerfile.frontend .
       - name: Publish image
         if: github.ref == 'refs/heads/master'
         run: |
           echo ${{ secrets.DOCKER_TOKEN }} | docker login ghcr.io -u $DOCKER_USER --password-stdin
-          docker tag ghcr.io/$REPOSITORY-web $REPOSITORY-web:$TAG
-          docker push ghcr.io/$REPOSITORY-web
+          docker tag $REPOSITORY $REPOSITORY:$TAG
+          docker push $REPOSITORY
   deploy:
     runs-on: ubuntu-latest
     needs: [build]

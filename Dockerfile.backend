@@ -21,4 +21,6 @@ RUN chown -R app:app /srv && \
 
 WORKDIR /srv
 
+EXPOSE 3000
+
 CMD ["/srv/app"]

@@ -10,10 +10,15 @@ $ npx npm-check-updates -u
 ### secrets
 
 ```sh
-REPOSITORY=lafin/template
-DOCKER_USER=lafin
-DOCKER_TOKEN=token
-DIGITALOCEAN_CLUSTER_NAME=s1
-DIGITALOCEAN_ACCESS_TOKEN=token
-SSH_PRIVATE_KEY=key
+VAULT_ROLE_ID=
+VAULT_SECRET_ID=
+```
+
+### vault
+
+```sh
+$ vault auth enable approle
+$ vault write auth/approle/role/template-go-react-role secret_id_ttl=0 token_policies=template-go-react-policy
+$ vault read auth/approle/role/template-go-react-role/role-id
+$ vault write -f auth/approle/role/template-go-react-role/secret-id
 ```

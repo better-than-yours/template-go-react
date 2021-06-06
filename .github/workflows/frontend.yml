@@ -19,22 +19,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Set env variables
-        run: |
-          echo "TAG=$(echo $GITHUB_SHA | head -c7)" >> $GITHUB_ENV
-          echo "REPOSITORY=ghcr.io/${REPOSITORY:-$GITHUB_REPOSITORY}-web" >> $GITHUB_ENV
-          echo "DOCKER_USER=${DOCKER_USER:-$GITHUB_ACTOR}" >> $GITHUB_ENV
-        env:
-          REPOSITORY: ${{ secrets.REPOSITORY }}
-          DOCKER_USER: ${{ secrets.DOCKER_USER }}
+      - uses: hashicorp/vault-action@v2.2.0
+        id: secrets
+        with:
+          url: http://vault.lafin.me:8200
+          method: approle
+          roleId: ${{ secrets.VAULT_ROLE_ID }}
+          secretId: ${{ secrets.VAULT_SECRET_ID }}
+          secrets: |
+            secret/${{ github.repository }} docker-user | DOCKER_USER ;
+            secret/${{ github.repository }} docker-token | DOCKER_TOKEN ;
       - name: Build image
         run: |
-          docker build --build-arg VERSION=$GITHUB_REF:$GITHUB_SHA -t $REPOSITORY -f Dockerfile.frontend .
+          REPOSITORY=ghcr.io/${{ github.repository }}-web
+          docker build --build-arg VERSION=${{ github.ref }}:${{ github.sha }} -t $REPOSITORY -f Dockerfile.frontend .
       - name: Publish image
         if: github.ref == 'refs/heads/master'
         run: |
-          echo ${{ secrets.DOCKER_TOKEN }} | docker login ghcr.io -u $DOCKER_USER --password-stdin
-          docker tag $REPOSITORY $REPOSITORY:$TAG
+          REPOSITORY=ghcr.io/${{ github.repository }}-web
+          echo ${{ env.DOCKER_TOKEN }} | docker login ghcr.io -u ${{ env.DOCKER_USER }} --password-stdin
           docker push $REPOSITORY
   deploy:
     runs-on: ubuntu-latest
@@ -42,25 +45,33 @@ jobs:
     if: github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@v2
+      - uses: hashicorp/vault-action@v2.2.0
+        id: secrets
+        with:
+          url: http://vault.lafin.me:8200
+          method: approle
+          roleId: ${{ secrets.VAULT_ROLE_ID }}
+          secretId: ${{ secrets.VAULT_SECRET_ID }}
+          secrets: |
+            secret/${{ github.repository }} digitalocean-cluster-name | DIGITALOCEAN_CLUSTER_NAME ;
+            secret/${{ github.repository }} digitalocean-access-token | DIGITALOCEAN_ACCESS_TOKEN ;
+            secret/${{ github.repository }} docker-user | DOCKER_USER ;
+            secret/${{ github.repository }} docker-token | DOCKER_TOKEN ;
+            secret/${{ github.repository }} ssh-private-key | SSH_PRIVATE_KEY ;
       - name: Setup SSH key
         uses: webfactory/ssh-agent@v0.4.1
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh-private-key: ${{ env.SSH_PRIVATE_KEY }}
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-      - name: Set env variables
-        run: |
-          echo "DOCKER_USER=${DOCKER_USER:-$GITHUB_ACTOR}" >> $GITHUB_ENV
-        env:
-          DOCKER_USER: ${{ secrets.DOCKER_USER }}
+          token: ${{ env.DIGITALOCEAN_ACCESS_TOKEN }}
       - name: Deploy
         run: |
-          DIGITALOCEAN_CLUSTER_IP=$(doctl compute droplet get ${{ secrets.DIGITALOCEAN_CLUSTER_NAME }} --template {{.PublicIPv4}})
+          DIGITALOCEAN_CLUSTER_IP=$(doctl compute droplet get ${{ env.DIGITALOCEAN_CLUSTER_NAME }} --template {{.PublicIPv4}})
           ssh-keyscan $DIGITALOCEAN_CLUSTER_IP >> $HOME/.ssh/known_hosts
-          doctl compute ssh ${{ secrets.DIGITALOCEAN_CLUSTER_NAME }} --ssh-command " \
-            echo ${{ secrets.DOCKER_TOKEN }} | docker login ghcr.io -u $DOCKER_USER --password-stdin
+          doctl compute ssh ${{ env.DIGITALOCEAN_CLUSTER_NAME }} --ssh-command " \
+            echo ${{ env.DOCKER_TOKEN }} | docker login ghcr.io -u ${{ env.DOCKER_USER }} --password-stdin
             docker-compose -f infra/docker-compose.s2.yml pull test-web; \
             docker-compose -f infra/docker-compose.s2.yml up -d test-web; \
           "

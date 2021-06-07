@@ -72,6 +72,6 @@ jobs:
           ssh-keyscan $DIGITALOCEAN_CLUSTER_IP >> $HOME/.ssh/known_hosts
           doctl compute ssh ${{ env.DIGITALOCEAN_CLUSTER_NAME }} --ssh-command " \
             echo ${{ env.DOCKER_TOKEN }} | docker login ghcr.io -u ${{ env.DOCKER_USER }} --password-stdin
-            docker-compose -f infra/docker-compose.s2.yml pull test-web; \
-            docker-compose -f infra/docker-compose.s2.yml up -d test-web; \
+            docker-compose -f infra/docker-compose.${{ env.DIGITALOCEAN_CLUSTER_NAME }}.yml pull test-web; \
+            docker-compose -f infra/docker-compose.${{ env.DIGITALOCEAN_CLUSTER_NAME }}.yml up -d test-web; \
           "

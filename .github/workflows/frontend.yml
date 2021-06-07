@@ -27,8 +27,8 @@ jobs:
           roleId: ${{ secrets.VAULT_ROLE_ID }}
           secretId: ${{ secrets.VAULT_SECRET_ID }}
           secrets: |
-            secret/${{ github.repository }} docker-user | DOCKER_USER ;
-            secret/${{ github.repository }} docker-token | DOCKER_TOKEN ;
+            secret/infra/common docker-user | DOCKER_USER ;
+            secret/infra/common docker-token | DOCKER_TOKEN ;
       - name: Build image
         run: |
           REPOSITORY=ghcr.io/${{ github.repository }}-web
@@ -53,11 +53,11 @@ jobs:
           roleId: ${{ secrets.VAULT_ROLE_ID }}
           secretId: ${{ secrets.VAULT_SECRET_ID }}
           secrets: |
-            secret/${{ github.repository }} digitalocean-cluster-name | DIGITALOCEAN_CLUSTER_NAME ;
-            secret/${{ github.repository }} digitalocean-access-token | DIGITALOCEAN_ACCESS_TOKEN ;
-            secret/${{ github.repository }} docker-user | DOCKER_USER ;
-            secret/${{ github.repository }} docker-token | DOCKER_TOKEN ;
-            secret/${{ github.repository }} ssh-private-key | SSH_PRIVATE_KEY ;
+            secret/infra/common digitalocean-cluster-name | DIGITALOCEAN_CLUSTER_NAME ;
+            secret/infra/common digitalocean-access-token | DIGITALOCEAN_ACCESS_TOKEN ;
+            secret/infra/common docker-user | DOCKER_USER ;
+            secret/infra/common docker-token | DOCKER_TOKEN ;
+            secret/infra/common ssh-private-key | SSH_PRIVATE_KEY ;
       - name: Setup SSH key
         uses: webfactory/ssh-agent@v0.4.1
         with:

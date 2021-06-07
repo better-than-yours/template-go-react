@@ -18,7 +18,7 @@ VAULT_SECRET_ID=
 
 ```sh
 $ vault auth enable approle
-$ vault write auth/approle/role/template-go-react-role secret_id_ttl=0 token_policies=template-go-react-policy
+$ vault write auth/approle/role/template-go-react-role secret_id_ttl=0 token_policies=common-policy
 $ vault read auth/approle/role/template-go-react-role/role-id
 $ vault write -f auth/approle/role/template-go-react-role/secret-id
 ```

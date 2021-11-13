@@ -22,7 +22,7 @@ jobs:
       - uses: actions/setup-go@v2
       - uses: golangci/golangci-lint-action@v2
         with:
-          version: v1.41
+          version: latest
           working-directory: backend
           args: --modules-download-mode=readonly
       - name: Test
@@ -105,7 +105,7 @@ jobs:
           echo $secret | jq -r '.common."ssh-private-key"[]' >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
       - name: Setup SSH key
-        uses: webfactory/ssh-agent@v0.4.1
+        uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ env.SSH_PRIVATE_KEY }}
       - name: Install doctl

@@ -10,17 +10,17 @@
     "lint": "eslint . --fix"
   },
   "dependencies": {
-    "preact": "^10.18.0"
+    "preact": "^10.18.1"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.5.0",
-    "@typescript-eslint/eslint-plugin": "^6.7.3",
-    "@typescript-eslint/parser": "^6.7.3",
+    "@typescript-eslint/eslint-plugin": "^6.7.4",
+    "@typescript-eslint/parser": "^6.7.4",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "prettier": "^3.0.3",
     "typescript": "^5.2.2",
-    "vite": "^4.4.9"
+    "vite": "^4.4.11"
   }
 }

@@ -13,7 +13,7 @@ jobs:
     - name: NPM dependencies
       run: |
         cd frontend
-        npx npm-check-updates -u && npm i
+        npx npm-check-updates -x /^@typescript-eslint.*$/ -u && npm i
         npm run build && rm -rf ./app
     - name: Go dependencies
       run: |

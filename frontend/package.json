@@ -10,10 +10,10 @@
     "lint": "eslint . --fix"
   },
   "dependencies": {
-    "preact": "^10.25.1"
+    "preact": "^10.25.2"
   },
   "devDependencies": {
-    "@preact/preset-vite": "^2.9.2",
+    "@preact/preset-vite": "^2.9.3",
     "@typescript-eslint/eslint-plugin": "^7.17.0",
     "@typescript-eslint/parser": "^7.17.0",
     "eslint-config-prettier": "^9.1.0",

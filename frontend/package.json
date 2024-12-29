@@ -10,7 +10,7 @@
     "lint": "eslint . --fix"
   },
   "dependencies": {
-    "preact": "^10.25.3"
+    "preact": "^10.25.4"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.9.3",
@@ -21,6 +21,6 @@
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "prettier": "^3.4.2",
     "typescript": "^5.7.2",
-    "vite": "^6.0.5"
+    "vite": "^6.0.6"
   }
 }

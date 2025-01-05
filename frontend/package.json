@@ -13,7 +13,7 @@
     "preact": "^10.25.4"
   },
   "devDependencies": {
-    "@preact/preset-vite": "^2.9.3",
+    "@preact/preset-vite": "^2.9.4",
     "@typescript-eslint/eslint-plugin": "^7.17.0",
     "@typescript-eslint/parser": "^7.17.0",
     "eslint-config-prettier": "^9.1.0",
@@ -21,6 +21,6 @@
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "prettier": "^3.4.2",
     "typescript": "^5.7.2",
-    "vite": "^6.0.6"
+    "vite": "^6.0.7"
   }
 }
